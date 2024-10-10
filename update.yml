@@ -1,0 +1,17 @@
+---
+- name: Automate Windows Updates
+  hosts: windows_servers
+  tasks:
+    - name: Ensure all Windows updates are installed
+      win_updates:
+        category:
+          - Critical Updates
+          - Security Updates
+        state: installed
+      register: update_results
+
+    - name: Reboot if required
+      win_reboot:
+        reboot_timeout: 600
+        test_command: whoami
+      when: update_results.reboot_required
