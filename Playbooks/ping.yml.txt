@@ -1,6 +1,6 @@
 ---
 - name: Ping Windows Hosts
-  hosts: windows_servers
+  hosts: 192.168.29.204
   tasks:
     - name: Ping the Windows hosts
       win_ping:
