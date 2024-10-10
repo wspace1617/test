@@ -1,6 +1,6 @@
 ---
 - name: Automate Windows Updates
-  hosts: windows_servers
+  hosts: 192.168.29.204
   tasks:
     - name: Ensure all Windows updates are installed
       win_updates:
