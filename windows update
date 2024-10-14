@@ -1,0 +1,16 @@
+---
+- name: Check for Windows Updates
+  hosts: windows
+  tasks:
+    - name: Install available updates
+      win_updates:
+        category_names:
+          - Security Updates
+          - Critical Updates
+        state: installed
+      register: update_result
+
+    - name: Reboot if required
+      win_reboot:
+        reboot_timeout: 600
+      when: update_result.reboot_required
