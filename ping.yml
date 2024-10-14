@@ -1,6 +1,8 @@
 ---
 - name: Ping Windows Hosts
-  hosts: 192.168.29.204
+  hosts: all
+  become: false
+  gather_facts: false
   tasks:
     - name: Ping the Windows hosts
       win_ping:
