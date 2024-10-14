@@ -1,6 +1,6 @@
 ---
 - name: Check Windows Event Log for Warnings and Errors
-  hosts: windows
+  hosts: all
   tasks:
     - name: Get last 10 System events
       win_eventlog:
