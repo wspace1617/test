@@ -1,6 +1,6 @@
 ---
 - name: Check Disk Space
-  hosts: windows
+  hosts: all
   tasks:
     - name: Check C: drive space
       win_stat:
