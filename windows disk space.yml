@@ -1,12 +1,14 @@
 ---
-- name: Check Disk Space
+- name: Check Windows Disk Space
   hosts: all
   tasks:
     - name: Check C: drive space
-      win_stat:
-        path: C:\
+      win_disk_facts:
       register: disk_info
 
-    - name: Display disk usage
+    - name: Display C: drive space
       debug:
-        msg: "Available space on C: is {{ disk_info.stat.available | human_readable }}."
+        msg: >
+          C: Drive Total Size: {{ disk_info.disks[0].size }} bytes
+          C: Drive Free Space: {{ disk_info.disks[0].free }} bytes
+          C: Drive Used Space: {{ disk_info.disks[0].size - disk_info.disks[0].free }} bytes
