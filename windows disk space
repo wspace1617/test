@@ -1,0 +1,12 @@
+---
+- name: Check Disk Space
+  hosts: windows
+  tasks:
+    - name: Check C: drive space
+      win_stat:
+        path: C:\
+      register: disk_info
+
+    - name: Display disk usage
+      debug:
+        msg: "Available space on C: is {{ disk_info.stat.available | human_readable }}."
