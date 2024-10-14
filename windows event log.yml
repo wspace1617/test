@@ -1,26 +1,17 @@
 ---
-- name: Check Windows Event Log for Warnings and Errors
-  hosts: all
+- name: Check Windows Event Log for Warnings or Errors
+  hosts: windows
   tasks:
-    - name: Get last 10 System events
-      win_eventlog:
-        name: System
-        query: "*"
-        maximum: 10
-      register: events
+    - name: Get event log entries
+      win_shell: |
+        Get-WinEvent -LogName Application | Where-Object { $_.LevelDisplayName -in @('Warning', 'Error') }
+      register: event_logs
 
-    - name: Filter Warning and Error events
-      set_fact:
-        warning_error_events: "{{ events | selectattr('LevelDisplayName', 'in', ['Warning', 'Error']) | list }}"
-
-    - name: Display Warning and Error events
+    - name: Display event log results
       debug:
-        msg: |
-          {% if warning_error_events | length > 0 %}
-          Found {{ warning_error_events | length }} Warning/Error events:
-          {% for event in warning_error_events %}
-          - Event ID: {{ event.EventID }} | Time: {{ event.TimeGenerated }} | Message: {{ event.Message }}
-          {% endfor %}
-          {% else %}
-          No Warning/Error events found.
-          {% endif %}
+        msg: "{{ event_logs.stdout_lines }}"
+      when: event_logs.stdout_lines | length > 0
+
+    - name: Take action if warning or error found
+      win_command: 'Write-Host "Action Taken: Review the application log."'
+      when: event_logs.stdout_lines | length > 0
