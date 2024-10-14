@@ -1,6 +1,6 @@
 ---
 - name: Check Windows Event Log for Warnings or Errors
-  hosts: windows
+  hosts: all
   tasks:
     - name: Get event log entries
       win_shell: |
