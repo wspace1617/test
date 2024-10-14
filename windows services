@@ -1,0 +1,8 @@
+---
+- name: Check Windows Services
+  hosts: windows
+  tasks:
+    - name: Ensure Windows Update Service is running
+      win_service:
+        name: wuauserv
+        state: started
