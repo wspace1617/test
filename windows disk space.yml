@@ -1,14 +1,20 @@
 ---
-- name: Check Windows Disk Space
-  hosts: all
+- name: Check Disk Space and Alert if Low
+  hosts: windows
   tasks:
-    - name: Check C: drive space
+    - name: Gather C: drive space facts
       win_disk_facts:
       register: disk_info
 
-    - name: Display C: drive space
+    - name: Set threshold for available space (in bytes)
+      set_fact:
+        threshold: 1073741824  # 1 GB in bytes
+        available_space: "{{ disk_info.disks[0].free }}"
+
+    - name: Send alert if available space is low
+      win_command: 'Write-Host "Alert: Low disk space on C: drive!"'
+      when: available_space < threshold
+
+    - name: Display available space
       debug:
-        msg: >
-          C: Drive Total Size: {{ disk_info.disks[0].size }} bytes
-          C: Drive Free Space: {{ disk_info.disks[0].free }} bytes
-          C: Drive Used Space: {{ disk_info.disks[0].size - disk_info.disks[0].free }} bytes
+        msg: "Available space on C: drive is {{ available_space | human_readable }}"
