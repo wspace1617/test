@@ -1,6 +1,6 @@
 ---
 - name: Create a ticket in ManageEngine based on Zabbix alert
-  hosts: localhost
+  hosts: all
   tasks:
     - name: Create a ticket using ManageEngine API
       uri:
