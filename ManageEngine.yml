@@ -1,0 +1,28 @@
+---
+- name: Create a ticket in ManageEngine based on Zabbix alert
+  hosts: localhost
+  tasks:
+    - name: Create a ticket using ManageEngine API
+      uri:
+        url: "https://<manageengine-url>/api/v3/requests"
+        method: POST
+        headers:
+          Content-Type: "application/json"
+          TECHNICIAN_KEY: "your_api_key_here"
+        body: |
+          {
+            "subject": "{{ zabbix_alert.subject }}",
+            "description": "{{ zabbix_alert.description }}",
+            "requester": {
+              "email_id": "user@example.com"
+            },
+            "status": "Open",
+            "priority": "High"
+          }
+        body_format: json
+        return_content: yes
+      register: ticket_creation_response
+
+    - name: Output the response for debugging
+      debug:
+        var: ticket_creation_response
